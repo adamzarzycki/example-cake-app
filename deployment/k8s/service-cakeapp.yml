@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cake-app-service
+spec:
+  selector:
+    app: cake-app
+  ports:
+    - port: 80
+      protocol: TCP
+  type: LoadBalancer

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cake-app-deployment
+  labels:
+    app: cake-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cake-app
+  template:
+    metadata:
+      labels:
+        app: cake-app
+    spec:
+      containers:
+        - name: cake-app
+          image: cake-app:latest
+          imagePullPolicy: Never # fix for minikube
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          env:
+            - name: MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: MYSQL_PASSWORD
+            - name: MYSQL_HOST
+              value: mysql-service.test-namespace.svc.cluster.local
+          livenessProbe:
+            tcpSocket:
+              port: 80
+          ports:
+            - containerPort: 80

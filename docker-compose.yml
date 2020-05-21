@@ -1,0 +1,51 @@
+version: '3.1'
+services:
+
+  cakephp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: example-cake-app_cakephp
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    volumes:
+      - .:/var/www/html/
+    external_links:
+      - mysql:mysql-service
+    environment:
+      - SECURITY_SALT=tf6w84nm2ng4b78v2cm4hginqcfghkagsreg
+      - MYSQL_HOST=mysql
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+
+  mysql:
+    image: mysql:5.6.39
+    container_name: example-cake-app_mysql
+    restart: always
+    ports:
+      - "3306:3006"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./deployment/sql/mycustom.cnf:/etc/mysql/conf.d/custom.cnf
+      # - ./deployment/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=products
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.0.2
+    container_name: example-cake-app_pma
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - 8080:80
+    links:
+      - mysql
+
+volumes:
+  mysql_data:
