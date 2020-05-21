@@ -88,7 +88,7 @@ All resources can be found in [k8s folder](deployment/k8s). Whole stack is deplo
 
 Run command from folder with minikube configuration (by default home folder)
 ```bash
-./<path_to_this repo>/init.minikube.sh
+./<path_to_this_repo>/init.minikube.sh
 ```
 Uses same image as in case of local deployment
 
